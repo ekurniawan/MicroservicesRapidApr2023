@@ -74,30 +74,31 @@ namespace PlatformService.Controllers
         [HttpPost]
         public ActionResult<PlatformReadDto> CreatePlatform(PlatformCreateDto platformCreateDto)
         {
-           /* var platformModel = new Platform
-            {
-                Name = platformCreateDto.Name,
-                Publisher = platformCreateDto.Publisher,
-                Cost = platformCreateDto.Cost
-            };
-            _repo.CreatePlatform(platformModel);
-            _repo.SaveChanges();
+            /* var platformModel = new Platform
+             {
+                 Name = platformCreateDto.Name,
+                 Publisher = platformCreateDto.Publisher,
+                 Cost = platformCreateDto.Cost
+             };
+             _repo.CreatePlatform(platformModel);
+             _repo.SaveChanges();
 
-            var platformReadDto = new PlatformReadDto
-            {
-                Id = platformModel.Id,
-                Name = platformModel.Name,
-                Publisher = platformModel.Publisher,
-                Cost = platformModel.Cost
-            };
-            return CreatedAtRoute(nameof(GetPlatformById),
-                new { Id = platformReadDto.Id }, platformReadDto);*/
+             var platformReadDto = new PlatformReadDto
+             {
+                 Id = platformModel.Id,
+                 Name = platformModel.Name,
+                 Publisher = platformModel.Publisher,
+                 Cost = platformModel.Cost
+             };
+             return CreatedAtRoute(nameof(GetPlatformById),
+                 new { Id = platformReadDto.Id }, platformReadDto);*/
             var platformModel = _mapper.Map<Platform>(platformCreateDto);
             _repo.CreatePlatform(platformModel);
             _repo.SaveChanges();
             var platformReadDto = _mapper.Map<PlatformReadDto>(platformModel);
             return CreatedAtRoute(nameof(GetPlatformById),
                 new { Id = platformReadDto.Id }, platformReadDto);
+            
         }
 
     }
