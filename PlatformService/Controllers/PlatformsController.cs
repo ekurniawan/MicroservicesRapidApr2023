@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PlatformService.Data;
 using PlatformService.Dtos;
@@ -14,15 +15,18 @@ namespace PlatformService.Controllers
     public class PlatformsController : ControllerBase
     {
         private readonly IPlatformRepo _repo;
-        public PlatformsController(IPlatformRepo repo)
+        private readonly IMapper _mapper;
+
+        public PlatformsController(IPlatformRepo repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<PlatformReadDto>> GetPlatforms()
         {
-            var listPlatformReadDto = new List<PlatformReadDto>();
+            /*var listPlatformReadDto = new List<PlatformReadDto>();
             Console.WriteLine("--> Getting Platforms....");
             var platformItem = _repo.GetAllPlatforms();
             foreach (var item in platformItem)
@@ -35,13 +39,18 @@ namespace PlatformService.Controllers
                     Cost = item.Cost
                 });
             }
-            return Ok(listPlatformReadDto);
+            return Ok(listPlatformReadDto);*/
+
+            Console.WriteLine("--> Getting Platforms....");
+            var platformItem = _repo.GetAllPlatforms();
+            var platformReadDtoList = _mapper.Map<IEnumerable<PlatformReadDto>>(platformItem);
+            return Ok(platformReadDtoList);
         }
 
         [HttpGet("{id}", Name = "GetPlatformById")]
         public ActionResult<PlatformReadDto> GetPlatformById(int id)
         {
-            var platformItem = _repo.GetPlatformById(id);
+            /*var platformItem = _repo.GetPlatformById(id);
             if (platformItem != null)
             {
                 return Ok(new PlatformReadDto
@@ -52,13 +61,20 @@ namespace PlatformService.Controllers
                     Cost = platformItem.Cost
                 });
             }
+            return NotFound();*/
+            var platformItem = _repo.GetPlatformById(id);
+            if (platformItem != null)
+            {
+                var platformReadDto = _mapper.Map<PlatformReadDto>(platformItem);
+                return Ok(platformReadDto);
+            }
             return NotFound();
         }
 
         [HttpPost]
         public ActionResult<PlatformReadDto> CreatePlatform(PlatformCreateDto platformCreateDto)
         {
-            var platformModel = new Platform
+           /* var platformModel = new Platform
             {
                 Name = platformCreateDto.Name,
                 Publisher = platformCreateDto.Publisher,
@@ -66,7 +82,7 @@ namespace PlatformService.Controllers
             };
             _repo.CreatePlatform(platformModel);
             _repo.SaveChanges();
-            
+
             var platformReadDto = new PlatformReadDto
             {
                 Id = platformModel.Id,
@@ -74,7 +90,13 @@ namespace PlatformService.Controllers
                 Publisher = platformModel.Publisher,
                 Cost = platformModel.Cost
             };
-            return CreatedAtRoute(nameof(GetPlatformById), 
+            return CreatedAtRoute(nameof(GetPlatformById),
+                new { Id = platformReadDto.Id }, platformReadDto);*/
+            var platformModel = _mapper.Map<Platform>(platformCreateDto);
+            _repo.CreatePlatform(platformModel);
+            _repo.SaveChanges();
+            var platformReadDto = _mapper.Map<PlatformReadDto>(platformModel);
+            return CreatedAtRoute(nameof(GetPlatformById),
                 new { Id = platformReadDto.Id }, platformReadDto);
         }
 
