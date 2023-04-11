@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace CommandsService.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/c/[controller]")]
     public class PlatformsController : ControllerBase
     {
+
         [HttpPost]
         public ActionResult TestInboundConnection()
         {
