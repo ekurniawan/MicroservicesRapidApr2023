@@ -22,7 +22,7 @@ namespace CommandsService.SyncDataServices
 
                 var content = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"{content}");
-                var platforms = JsonSerializer.Deserialize<List<PlatformReadDto>>(content).ToList();
+                var platforms = JsonSerializer.Deserialize<List<PlatformReadDto>>(content);
                 if (platforms != null)
                 {
                     Console.WriteLine($"{platforms.Count()} platforms returned from Platforms Service");
