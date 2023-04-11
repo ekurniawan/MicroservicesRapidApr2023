@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommandsService.Data;
 using CommandsService.Dtos;
+using CommandsService.Models;
 using CommandsService.SyncDataServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,10 +47,22 @@ namespace CommandsService.Controllers
         }
 
         [HttpPost]
-        public ActionResult TestInboundConnection()
+        public async Task<ActionResult> TestInboundConnection(PlatformReadDto platformReadDto)
         {
-            Console.WriteLine("--> Inbound POST Command Service");
-            return Ok("Inbound test from Platforms Controller");
+            Console.WriteLine("--> Tambahkan platform baru");
+            try
+            {
+                await _platformRepo.CreatePlatform(new Platform
+                {
+                    Id = platformReadDto.Id,
+                    Name = platformReadDto.Name
+                });
+                return Ok(platformReadDto);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest($"Could not add platform to the database: {ex.Message}");
+            }
         }
     }
 

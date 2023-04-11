@@ -39,6 +39,23 @@ namespace CommandsService.Data
             }
         }
 
+        public async Task CreatePlatform(Platform plat)
+        {
+            try
+            {
+                if (plat == null)
+                {
+                    throw new ArgumentNullException(nameof(plat));
+                }
+                await _context.Platforms.AddAsync(plat);
+                await _context.SaveChangesAsync();
+            }
+            catch (System.Exception ex)
+            {
+                throw new Exception($"Could not add platform to the database: {ex.Message}");
+            }
+        }
+
         public async Task<IEnumerable<Platform>> GetAllPlatforms()
         {
             return await _context.Platforms.ToListAsync();
