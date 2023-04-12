@@ -15,9 +15,12 @@ builder.Services.AddSwaggerGen();
 
 //menambahkan automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+builder.Services.AddDbContext<AppDbContext>(opt => 
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("PlatformsConn")));
 //ef core in memory
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
+//builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
+
+
 builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
 
 builder.Services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
