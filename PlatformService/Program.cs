@@ -15,8 +15,18 @@ builder.Services.AddSwaggerGen();
 
 //menambahkan automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddDbContext<AppDbContext>(opt => 
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("PlatformsConn")));
+
+if (builder.Environment.IsProduction())
+{
+    Console.WriteLine("--> Using Sql Server Db");
+    builder.Services.AddDbContext<AppDbContext>(opt =>
+        opt.UseSqlServer(builder.Configuration.GetConnectionString("PlatformsConn")));
+}
+else
+{
+    Console.WriteLine("--> Using In-Memory Db");
+    builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
+}
 //ef core in memory
 //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
 
@@ -41,6 +51,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 //menjalankan seeding data
-PrepDb.PrepPopulation(app);
+PrepDb.PrepPopulation(app, builder.Environment.IsProduction());
 
 app.Run();
