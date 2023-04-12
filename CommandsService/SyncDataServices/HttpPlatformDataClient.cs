@@ -10,13 +10,16 @@ namespace CommandsService.SyncDataServices
     public class HttpPlatformDataClient : IPlatformDataClient
     {
         private readonly HttpClient _httpClient;
-        public HttpPlatformDataClient(HttpClient httpClient)
+        private readonly IConfiguration _configuration;
+
+        public HttpPlatformDataClient(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _configuration = configuration;
         }
         public async Task<IEnumerable<PlatformReadDto>> ReturnAllPlatforms()
         {
-            var response = await _httpClient.GetAsync("http://localhost:6000/api/platforms");
+            var response = await _httpClient.GetAsync(_configuration["PlatformService"]);
             if (response.IsSuccessStatusCode)
             {
 
