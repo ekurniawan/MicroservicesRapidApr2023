@@ -6,18 +6,21 @@ using System.Threading.Tasks;
 
 namespace CommandsService.Models
 {
-    public class Platform
+    public class Command
     {
         [Key]
         [Required]
         public int Id { get; set; }
 
         [Required]
-        public int ExternalId { get; set; }
-        
+        public string HowTo { get; set; }
+
         [Required]
-        public string Name { get; set; }
+        public string CommandLine { get; set; }
+
+        [Required]
+        public int PlatformId { get; set; }
         
-        public ICollection<Command> Commands { get; set; } = new List<Command>();
+        public Platform Platform { get; set; }
     }
 }

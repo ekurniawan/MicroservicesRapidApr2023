@@ -30,8 +30,9 @@ else
 //ef core in memory
 //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
 
-
 builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
+//pakai ado
+//builder.Services.AddScoped<IPlatformRepo, PlatformRepoAdo>();
 
 builder.Services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
 
