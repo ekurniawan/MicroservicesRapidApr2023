@@ -1,31 +1,31 @@
-apiVersion: apps/v1 
-kind: Deployment 
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: platforms-depl
 spec:
   replicas: 1
-  selector: 
+  selector:
     matchLabels:
       app: platformservice
   template:
-    metadata: 
+    metadata:
       labels:
-        app: platformservice
+          app: platformservice
     spec:
       containers:
-      - name: platformservice
-        image: ekurniawan/platformservice:latest
+        - name: platformservice
+          image: ekurniawan/platformservice:latest
 ---
-apiVersion: v1 
-kind: Service 
+apiVersion: v1
+kind: Service
 metadata:
   name: platforms-clusterip-srv
 spec:
-  type: ClusterIP 
+  type: ClusterIP
   selector:
-    app: platformservice 
+    app: platformservice
   ports:
-  - name: platformservice 
-  protocol: TCP
-  port: 80
-  targetPort: 80
+  - name: platformservice
+    protocol: TCP
+    port: 80
+    targetPort: 80
