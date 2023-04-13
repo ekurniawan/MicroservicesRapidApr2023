@@ -18,7 +18,7 @@ namespace RabbitProducer
             var count = 0;
             while (true)
             {
-                var message = new { Name = "Producer", Message = $"Urutan pesan ke: {count}" };
+                var message = new { Name = "Producer1 ", Message = $" Katalog detail ke: {count}" };
                 var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
                 channel.BasicPublish("contoh-topic-exchange", "katalog.details", null, body);
                 count++;

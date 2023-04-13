@@ -6,22 +6,25 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
 
-namespace RabbitProducer
+namespace RabbitProducer2
 {
-    public class DirectExchangePublisher
+    public class TopicExchangePublisher
     {
         public static void Publish(IModel channel)
         {
-            channel.ExchangeDeclare("contoh-direct-exchange", ExchangeType.Direct);
+            channel.ExchangeDeclare("contoh-topic-exchange",
+            ExchangeType.Topic);
+
             var count = 0;
             while (true)
             {
-                var message = new { Name = "Producer", Message = $"Urutan pesan ke-: {count}" };
+                var message = new { Name = "Producer2 ", Message = $" Katalog barang ke: {count}" };
                 var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
-                channel.BasicPublish("contoh-direct-exchange", "katalog.details", null, body);
+                channel.BasicPublish("contoh-topic-exchange", "katalog.barang", null, body);
                 count++;
                 Thread.Sleep(1000);
             }
+
         }
     }
 }
