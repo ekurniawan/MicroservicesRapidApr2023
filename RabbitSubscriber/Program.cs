@@ -9,4 +9,4 @@ var factory = new ConnectionFactory
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 
-TopicExchangeConsumer.Consume(channel);
+FanoutExchangeConsumer.Consume(channel);

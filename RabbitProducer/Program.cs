@@ -8,4 +8,4 @@ var factory = new ConnectionFactory
 };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
-TopicExchangePublisher.Publish(channel);
+FanoutExchangeProducer.Publish(channel);
