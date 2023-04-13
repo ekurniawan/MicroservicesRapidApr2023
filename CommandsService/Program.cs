@@ -13,6 +13,8 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 //ef core in memory
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
 builder.Services.AddHttpClient<IPlatformDataClient, HttpPlatformDataClient>();
