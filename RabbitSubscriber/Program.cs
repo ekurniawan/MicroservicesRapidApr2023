@@ -1,2 +1,12 @@
 ﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+using RabbitMQ.Client;
+using RabbitSubscriber;
+
+var factory = new ConnectionFactory
+{
+    Uri = new Uri("amqp://guest:guest@localhost:5672")
+};
+using var connection = factory.CreateConnection();
+using var channel = connection.CreateModel();
+
+DirectExchageConsumer.Consume(channel);
