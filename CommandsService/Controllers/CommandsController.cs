@@ -49,7 +49,21 @@ namespace CommandsService.Controllers
             return Ok(_mapper.Map<CommandReadDto>(command));
         }
 
-        
+        [HttpPost]
+        public ActionResult<CommandReadDto> CreateCommandForPlatform(int platformId,
+            CommandCreateDto commandDto)
+        {
+            if (!_commandRepo.PlaformExits(platformId))
+            {
+                return NotFound();
+            }
 
+            var command = _mapper.Map<Models.Command>(commandDto);
+            _commandRepo.CreateCommand(platformId, command);
+            _commandRepo.SaveChanges();
+            var commandReadDto = _mapper.Map<CommandReadDto>(command);
+            return CreatedAtRoute(nameof(GetCommandForPlatform),
+                new { platformId, commandId = commandReadDto.Id }, commandReadDto);
+        }
     }
 }
