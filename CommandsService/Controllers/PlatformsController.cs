@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CommandsService.Data;
 using CommandsService.Dtos;
 using CommandsService.Models;
@@ -15,10 +16,15 @@ namespace CommandsService.Controllers
     public class PlatformsController : ControllerBase
     {
         private readonly IPlatformRepo _platformRepo;
+        private readonly ICommandRepo _commandRepo;
+        private readonly IMapper _mapper;
 
-        public PlatformsController(IPlatformRepo platformRepo)
+        public PlatformsController(IPlatformRepo platformRepo,
+            ICommandRepo commandRepo, IMapper mapper)
         {
             _platformRepo = platformRepo;
+            _commandRepo = commandRepo;
+            _mapper = mapper;
         }
 
         [HttpPost("Sync")]
@@ -36,14 +42,11 @@ namespace CommandsService.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<PlatformReadDto>> GetPlatforms()
+        public ActionResult<IEnumerable<PlatformReadDto>> GetPlatforms()
         {
-            var platforms = await _platformRepo.GetAllPlatforms();
-            return platforms.Select(p => new PlatformReadDto
-            {
-                Id = p.Id,
-                Name = p.Name
-            }).ToList();
+            Console.WriteLine("--> Getting Platforms from CommandsService");
+            var platformItems = _commandRepo.GetAllPlatforms();
+            return Ok(_mapper.Map<IEnumerable<PlatformReadDto>>(platformItems));
         }
 
         [HttpPost]
