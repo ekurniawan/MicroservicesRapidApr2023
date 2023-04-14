@@ -30,7 +30,6 @@ namespace PlatformService.AsyncDataServices
                 _channel.ExchangeDeclare(exchange: "trigger", type: ExchangeType.Fanout);
                 _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 Console.WriteLine("--> Connected to Message Broker");
-
             }
             catch (Exception ex)
             {
