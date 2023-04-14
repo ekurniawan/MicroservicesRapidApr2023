@@ -1,4 +1,6 @@
+using CommandsService.AsyncDataServices;
 using CommandsService.Data;
+using CommandsService.EventProcessing;
 using CommandsService.SyncDataServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +22,8 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMe
 builder.Services.AddHttpClient<IPlatformDataClient, HttpPlatformDataClient>();
 builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
 builder.Services.AddScoped<ICommandRepo, CommandRepo>();
+builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
+builder.Services.AddHostedService<MessageBusSubscriber>();
 
 var app = builder.Build();
 
