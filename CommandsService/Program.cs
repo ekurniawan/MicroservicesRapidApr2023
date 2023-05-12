@@ -23,14 +23,29 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMem"));
 builder.Services.AddHttpClient<IPlatformDataClient, HttpPlatformDataClient>()
 .AddTransientHttpErrorPolicy(polBuilder => polBuilder.Or<TimeoutRejectedException>().WaitAndRetryAsync(
-    5,
+    8,
     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
     onRetry: (outcome, timespan, retryAttempt) =>
     {
         var serviceProvider = builder.Services.BuildServiceProvider();
         serviceProvider.GetService<ILogger<HttpPlatformDataClient>>()?
         .LogWarning($"Delaying for {timespan.TotalSeconds} seconds, then making retry {retryAttempt}.");
-    }));
+    }))
+    .AddTransientHttpErrorPolicy(polBuilder => polBuilder.Or<TimeoutRejectedException>().CircuitBreakerAsync(
+        3, TimeSpan.FromSeconds(4),
+        onBreak: (outcome, timespan) =>
+        {
+            var serviceProvider = builder.Services.BuildServiceProvider();
+            serviceProvider.GetService<ILogger<HttpPlatformDataClient>>()?
+            .LogWarning($"Circuit breaker opened: {timespan.TotalSeconds} seconds.");
+        },
+        onReset: () =>
+        {
+            var serviceProvider = builder.Services.BuildServiceProvider();
+            serviceProvider.GetService<ILogger<HttpPlatformDataClient>>()?
+            .LogWarning($"Circuit breaker reset.");
+        }))
+        .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(1));
 
 builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
 builder.Services.AddScoped<ICommandRepo, CommandRepo>();
