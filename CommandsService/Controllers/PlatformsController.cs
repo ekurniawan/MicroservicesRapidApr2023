@@ -49,6 +49,14 @@ namespace CommandsService.Controllers
             return Ok(_mapper.Map<IEnumerable<PlatformReadDto>>(platformItems));
         }
 
+        [HttpGet("FromServices")]
+        public async Task<ActionResult<IEnumerable<PlatformReadDto>>> GetAllPlatformsFromServices()
+        {
+            Console.WriteLine("--> Getting Platforms from CommandsService");
+            var platformItems = await _platformRepo.GetAllPlatformsFromServices();
+            return Ok(_mapper.Map<IEnumerable<PlatformReadDto>>(platformItems));
+        }
+
         [HttpPost]
         public async Task<ActionResult> TestInboundConnection(PlatformReadDto platformReadDto)
         {

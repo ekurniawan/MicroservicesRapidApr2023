@@ -30,23 +30,25 @@ namespace PlatformService.Controllers
             _messageBusClient = messageBusClient;
         }
 
+        private static int requestCounter = 0;
+
         [HttpGet]
-        public ActionResult<IEnumerable<PlatformReadDto>> GetPlatforms()
+        public async Task<ActionResult<IEnumerable<PlatformReadDto>>> GetPlatforms()
         {
-            /*var listPlatformReadDto = new List<PlatformReadDto>();
-            Console.WriteLine("--> Getting Platforms....");
-            var platformItem = _repo.GetAllPlatforms();
-            foreach (var item in platformItem)
+            requestCounter++;
+            Console.WriteLine($"--> Request Counter {requestCounter}");
+            if (requestCounter <= 2)
             {
-                listPlatformReadDto.Add(new PlatformReadDto
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Publisher = item.Publisher,
-                    Cost = item.Cost
-                });
+                Console.WriteLine($"Request counter: {requestCounter} - delaying...");
+                await Task.Delay(TimeSpan.FromSeconds(10));
             }
-            return Ok(listPlatformReadDto);*/
+
+            if (requestCounter <= 4)
+            {
+                Console.WriteLine($"Request counter: {requestCounter}: 500 (internal server error)");
+                return StatusCode(500);
+            }
+            Console.WriteLine($"Request counter: {requestCounter}: 200 (ok)");
 
             Console.WriteLine("--> Getting Platforms....");
             var platformItem = _repo.GetAllPlatforms();
@@ -110,7 +112,7 @@ namespace PlatformService.Controllers
                 //await _commandDataClient.SendPlatformToCommand(platformReadDto);
 
                 //send async message    
-                var platformPublishedDto = _mapper.Map<PlatformPublishedDto>(platformReadDto); 
+                var platformPublishedDto = _mapper.Map<PlatformPublishedDto>(platformReadDto);
                 platformPublishedDto.Event = "Platform_Published";
                 _messageBusClient.PublishNewPlatform(platformPublishedDto);
             }

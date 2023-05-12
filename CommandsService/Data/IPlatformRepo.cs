@@ -10,6 +10,7 @@ namespace CommandsService.Data
     {
         Task CreatePlatform();
         Task<IEnumerable<Platform>> GetAllPlatforms();
+        Task<IEnumerable<Platform>> GetAllPlatformsFromServices();
         Task CreatePlatform(Platform plat);
     }
 }

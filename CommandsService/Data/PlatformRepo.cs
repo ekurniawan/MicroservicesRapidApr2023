@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CommandsService.Models;
 using CommandsService.SyncDataServices;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,14 @@ namespace CommandsService.Data
     {
         private readonly AppDbContext _context;
         private readonly IPlatformDataClient _client;
-        public PlatformRepo(AppDbContext context, IPlatformDataClient client)
+        private readonly IMapper _mapper;
+
+        public PlatformRepo(AppDbContext context, IPlatformDataClient client,
+        IMapper mapper)
         {
             _context = context;
             _client = client;
+            _mapper = mapper;
         }
 
         public async Task CreatePlatform()
@@ -59,6 +64,12 @@ namespace CommandsService.Data
         public async Task<IEnumerable<Platform>> GetAllPlatforms()
         {
             return await _context.Platforms.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Platform>> GetAllPlatformsFromServices()
+        {
+            var platforms = await _client.ReturnAllPlatforms();
+            return _mapper.Map<IEnumerable<Platform>>(platforms);
         }
     }
 }

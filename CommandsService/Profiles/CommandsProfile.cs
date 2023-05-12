@@ -13,6 +13,7 @@ namespace CommandsService.Profiles
         public CommandsProfile()
         {
             CreateMap<Platform, PlatformReadDto>();
+            CreateMap<PlatformReadDto, Platform>();
             CreateMap<CommandCreateDto, Command>(); 
             CreateMap<Command, CommandReadDto>(); 
             CreateMap<PlatformPublishedDto, Platform>()
