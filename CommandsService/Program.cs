@@ -49,8 +49,8 @@ builder.Services.AddHttpClient<IPlatformDataClient, HttpPlatformDataClient>()
 
 builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
 builder.Services.AddScoped<ICommandRepo, CommandRepo>();
-//builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
-//builder.Services.AddHostedService<MessageBusSubscriber>();
+builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
+builder.Services.AddHostedService<MessageBusSubscriber>();
 
 var app = builder.Build();
 

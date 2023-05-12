@@ -35,7 +35,7 @@ namespace PlatformService.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PlatformReadDto>>> GetPlatforms()
         {
-            requestCounter++;
+            /*requestCounter++;
             Console.WriteLine($"--> Request Counter {requestCounter}");
             if (requestCounter <= 2)
             {
@@ -48,7 +48,7 @@ namespace PlatformService.Controllers
                 Console.WriteLine($"Request counter: {requestCounter}: 500 (internal server error)");
                 return StatusCode(500);
             }
-            Console.WriteLine($"Request counter: {requestCounter}: 200 (ok)");
+            Console.WriteLine($"Request counter: {requestCounter}: 200 (ok)");*/
 
             Console.WriteLine("--> Getting Platforms....");
             var platformItem = _repo.GetAllPlatforms();
